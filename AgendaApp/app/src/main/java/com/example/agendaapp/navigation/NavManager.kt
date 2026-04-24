@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.agendaapp.viewmodels.AddAppointmentScreen
+import com.example.agendaapp.views.AddAppointmentScreen
 import com.example.agendaapp.viewmodels.AgendaViewModel
 import com.example.agendaapp.views.EditAppointmentScreen
 import com.example.agendaapp.views.HomeScreen
