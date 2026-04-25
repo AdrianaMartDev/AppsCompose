@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.agendaapp.models.Appointment
 import com.example.agendaapp.room.AgendaDao
 import com.example.agendaapp.state.AgendaState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -16,6 +17,8 @@ class AgendaViewModel(
 ) : ViewModel() {
     var state by mutableStateOf(AgendaState())
         private set
+
+    private var job: Job? = null
 
     init {
         viewModelScope.launch {
@@ -28,6 +31,17 @@ class AgendaViewModel(
     fun addAppointment(appointment: Appointment) {
         viewModelScope.launch {
             dao.addAppointment(appointment)
+        }
+    }
+
+    fun getAppointment(idAppointment: String?) {
+        if (idAppointment == null) return
+
+        job?.cancel()
+        job = viewModelScope.launch {
+            dao.getAppointment(idAppointment).collectLatest {
+                state = state.copy(appointment = it)
+            }
         }
     }
 

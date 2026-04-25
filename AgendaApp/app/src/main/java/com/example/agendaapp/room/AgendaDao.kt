@@ -13,6 +13,9 @@ interface AgendaDao {
     @Query("Select * from appointment")
     fun getAllAppointments(): Flow<List<Appointment>>
 
+    @Query("Select * from appointment where idAppointment = :idAppointment")
+    fun getAppointment(idAppointment: String): Flow<Appointment?>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAppointment(appointment: Appointment)
 
