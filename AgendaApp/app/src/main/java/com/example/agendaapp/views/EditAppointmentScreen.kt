@@ -100,9 +100,9 @@ fun EditContentView(
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var namePatient by remember { mutableStateOf(appointment?.namePatient ?: "") }
-    var phonePatient by remember { mutableStateOf(appointment?.phonePatient ?: "") }
-    var subject by remember { mutableStateOf(appointment?.subject ?: "") }
+    var namePatient by remember(appointment) { mutableStateOf(appointment?.namePatient ?: "") }
+    var phonePatient by remember(appointment) { mutableStateOf(appointment?.phonePatient ?: "") }
+    var subject by remember(appointment) { mutableStateOf(appointment?.subject ?: "") }
 
     val dayList =
         listOf(
@@ -167,7 +167,8 @@ fun EditContentView(
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number
-            )
+            ),
+            maxLines = maxTel
         )
 
         OutlinedTextField(
@@ -186,7 +187,10 @@ fun EditContentView(
         ExposedDropdownMenuBox(
             modifier = Modifier
                 .padding(horizontal = 30.dp)
-                .padding(bottom = 15.dp),
+                .padding(
+                    bottom = 15.dp,
+                    top = 15.dp
+                ),
             expanded = showDays,
             onExpandedChange = {
                 showDays = !showDays

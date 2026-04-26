@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.agendaapp.models.Appointment
@@ -271,28 +272,29 @@ fun AddAppointmentContentView(
                 }
             }
         }
-    }
 
-    Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 30.dp)
-            .padding(bottom = 15.dp),
-        onClick = {
-            val appointment = Appointment(
-                idAppointment = System.currentTimeMillis().toString(),
-                namePatient = namePatience,
-                phonePatient = phonePatience,
-                subject = subject,
-                dayAppointment = selectedDay,
-                timeAppointment = selectedTime
-            )
 
-            viewModel.addAppointment(appointment)
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp)
+                .padding(bottom = 15.dp),
+            onClick = {
+                val appointment = Appointment(
+                    idAppointment = System.currentTimeMillis().toString(),
+                    namePatient = namePatience,
+                    phonePatient = phonePatience,
+                    subject = subject,
+                    dayAppointment = selectedDay,
+                    timeAppointment = selectedTime
+                )
 
-            navController.popBackStack()
+                viewModel.addAppointment(appointment)
+
+                navController.popBackStack()
+            }
+        ) {
+            Text(text = "Agend appointment")
         }
-    ) {
-        Text(text = "Agend appointment")
     }
 }
