@@ -30,11 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.agendaapp.R
 import com.example.agendaapp.models.Appointment
 import com.example.agendaapp.viewmodels.AgendaViewModel
 
@@ -50,7 +52,7 @@ fun AddAppointmentScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Add Appointment",
+                        text = stringResource(R.string.add_appointment),
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -64,7 +66,7 @@ fun AddAppointmentScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White
                         )
                     }
@@ -91,33 +93,13 @@ fun AddAppointmentContentView(
     var phonePatience by remember { mutableStateOf("") }
     var subject by remember { mutableStateOf("") }
 
-    val dayList =
-        listOf(
-            "Select day",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday"
-        )
+    val dayList = stringArrayResource(id = R.array.days_of_week)
 
     var selectedDay by remember { mutableStateOf(dayList[0]) }
     var showDays by remember { mutableStateOf(false) }
 
-    val schedulesList = listOf(
-        "Select time",
-        "9:00 to 10:00",
-        "10:00 to 11:00",
-        "11:00 to 12:00",
-        "12:00 to 13:00",
-        "13:00 to 14:00",
-        "14:00 to 15:00",
-        "15:00 to 16:00",
-        "16:00 to 17:00",
-        "17:00 to 18:00",
-        "18:00 to 19:00"
-    )
+    val schedulesList = stringArrayResource(id = R.array.time_slots)
+
     var selectedTime by remember { mutableStateOf(schedulesList[0]) }
     var showTime by remember { mutableStateOf(false) }
 
@@ -140,7 +122,7 @@ fun AddAppointmentContentView(
                 namePatience = it
             },
             label = {
-                Text(text = "Name of patience")
+                Text(text = stringResource(R.string.name_of_patience_to_search))
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text
@@ -157,11 +139,12 @@ fun AddAppointmentContentView(
                 phonePatience = it
             },
             label = {
-                Text(text = "Phone of patience")
+                Text(text = stringResource(R.string.phone_of_patience))
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number
-            )
+            ),
+            maxLines = maxTel
         )
 
         OutlinedTextField(
@@ -174,7 +157,7 @@ fun AddAppointmentContentView(
                 subject = it
             },
             label = {
-                Text(text = "Subject")
+                Text(text = stringResource(R.string.subject))
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text
@@ -294,7 +277,7 @@ fun AddAppointmentContentView(
                 navController.popBackStack()
             }
         ) {
-            Text(text = "Agend appointment")
+            Text(text = stringResource(R.string.agend_appointment))
         }
     }
 }
