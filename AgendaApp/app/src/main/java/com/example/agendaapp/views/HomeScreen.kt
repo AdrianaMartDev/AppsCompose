@@ -34,9 +34,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.agendaapp.R
+import com.example.agendaapp.navigation.Routes
 import com.example.agendaapp.viewmodels.AgendaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +54,7 @@ fun HomeScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Agenda",
+                        text = stringResource(R.string.agenda),
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -64,14 +67,14 @@ fun HomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("add")
+                    navController.navigate(Routes.AddAppointment.rout)
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add"
+                    contentDescription = stringResource(R.string.add)
                 )
             }
         }
@@ -106,12 +109,12 @@ fun HomeContentView(
                     txtPatience = it
                 },
                 placeholder = {
-                    Text(text = "Name of patience to search...")
+                    Text(text = stringResource(R.string.name_of_patience_to_search))
                 },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
+                        contentDescription = stringResource(R.string.search)
                     )
                 },
                 shape = RoundedCornerShape(8.dp),
@@ -135,12 +138,12 @@ fun HomeContentView(
                 var color: Color = Color.White
 
                 when (it.dayAppointment) {
-                    "Monday" -> color = Color.Red
-                    "Tuesday" -> color = Color.Blue
-                    "Wednesday" -> color = Color.Gray
-                    "Thursday" -> color = Color.Cyan
-                    "Friday" -> color = Color.Magenta
-                    "Saturday" -> color = Color.LightGray
+                    stringResource(R.string.monday) -> color = Color.Red
+                    stringResource(R.string.tuesday) -> color = Color.Blue
+                    stringResource(R.string.wednesday) -> color = Color.Gray
+                    stringResource(R.string.thursday) -> color = Color.Cyan
+                    stringResource(R.string.friday) -> color = Color.Magenta
+                    stringResource(R.string.saturday) -> color = Color.LightGray
                 }
 
                 Card(
@@ -176,11 +179,11 @@ fun HomeContentView(
 
                         Row(modifier = Modifier.fillMaxWidth()) {
                             IconButton(
-                                onClick = { navController.navigate("edit/${it.idAppointment}") }
+                                onClick = { navController.navigate(Routes.Edit.createRoute(it.idAppointment)) }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
-                                    contentDescription = "Edit"
+                                    contentDescription = stringResource(R.string.edit)
                                 )
                             }
 
@@ -191,7 +194,7 @@ fun HomeContentView(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete"
+                                    contentDescription = stringResource(R.string.delete)
                                 )
                             }
                         }
