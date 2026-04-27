@@ -11,6 +11,8 @@ import com.example.agendaapp.viewmodels.AgendaViewModel
 import com.example.agendaapp.views.EditAppointmentScreen
 import com.example.agendaapp.views.HomeScreen
 
+const val ID_APPOINTMENT = "idAppointment"
+
 @Composable
 fun NavManager(
     viewModel: AgendaViewModel
@@ -18,27 +20,27 @@ fun NavManager(
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = Routes.Home.rout
     ) {
-        composable(route = "home") {
+        composable(route = Routes.Home.rout) {
             HomeScreen(
                 navController,
                 viewModel
             )
         }
-        composable(route = "add") {
+        composable(route = Routes.AddAppointment.rout) {
             AddAppointmentScreen(navController, viewModel)
         }
         composable(
-            route = "edit/{idAppointment}",
+            route = Routes.Edit.rout,
             arguments = listOf(
-                navArgument("idAppointment") { type = NavType.StringType }
+                navArgument(ID_APPOINTMENT) { type = NavType.StringType }
             )
         ) {
             EditAppointmentScreen(
                 navController,
                 viewModel,
-                it.arguments?.getString("idAppointment")
+                it.arguments?.getString(ID_APPOINTMENT)
             )
         }
     }

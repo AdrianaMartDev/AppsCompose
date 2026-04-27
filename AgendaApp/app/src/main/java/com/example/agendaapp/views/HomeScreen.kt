@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.agendaapp.R
+import com.example.agendaapp.models.Appointment
 import com.example.agendaapp.navigation.Routes
 import com.example.agendaapp.viewmodels.AgendaViewModel
 
@@ -93,115 +94,144 @@ fun HomeContentView(
     navController: NavController,
     viewModel: AgendaViewModel
 ) {
-
-    var txtPatience by remember { mutableStateOf("") }
-    val state = viewModel.state
-
+    var namePatient by remember { mutableStateOf("") }
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
-            OutlinedTextField(
-                value = txtPatience,
-                onValueChange = {
-                    txtPatience = it
-                },
-                placeholder = {
-                    Text(text = stringResource(R.string.name_of_patience_to_search))
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(R.string.search)
-                    )
-                },
-                shape = RoundedCornerShape(8.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                )
+            SearchComponent(
+                namePatient,
+                onSearchChange = { namePatient = it }
             )
         }
+        CreatedAppointments(viewModel, namePatient, navController)
+    }
 
-        LazyColumn {
-            items(
-                state.appointmentList.filter {
-                    it.namePatient.lowercase().contains(txtPatience.lowercase())
-                }.sortedBy {
-                    it.dayAppointment
-                }.sortedBy {
-                    it.timeAppointment
-                }
-            ) {
-                var color: Color = Color.White
+}
 
-                when (it.dayAppointment) {
-                    stringResource(R.string.monday) -> color = Color.Red
-                    stringResource(R.string.tuesday) -> color = Color.Blue
-                    stringResource(R.string.wednesday) -> color = Color.Gray
-                    stringResource(R.string.thursday) -> color = Color.Cyan
-                    stringResource(R.string.friday) -> color = Color.Magenta
-                    stringResource(R.string.saturday) -> color = Color.LightGray
-                }
+@Composable
+fun SearchComponent(
+    searchNamePatient: String,
+    onSearchChange: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = searchNamePatient,
+        onValueChange = onSearchChange,
+        placeholder = {
+            Text(text = stringResource(R.string.name_of_patience_to_search))
+        },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = stringResource(R.string.search)
+            )
+        },
+        shape = RoundedCornerShape(8.dp),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+        )
+    )
+}
 
-                Card(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(
-                        contentColor = color,
-                        containerColor = Color.White
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 6.dp
-                    )
+@Composable
+fun CreatedAppointments(
+    viewModel: AgendaViewModel,
+    namePatient: String,
+    navController: NavController
+) {
+    val state = viewModel.state
+
+    LazyColumn {
+        items(
+            state.appointmentList.filter {
+                it.namePatient.lowercase().contains(namePatient.lowercase())
+            }.sortedBy {
+                it.dayAppointment
+            }.sortedBy {
+                it.timeAppointment
+            }
+        ) { item ->
+            AppointmentInformation(
+                viewModel = viewModel,
+                navController = navController,
+                appointment = item
+            )
+        }
+    }
+}
+
+@Composable
+fun AppointmentInformation(
+    viewModel: AgendaViewModel,
+    navController: NavController,
+    appointment: Appointment
+) {
+    var color: Color = Color.White
+
+    when (appointment.dayAppointment) {
+        stringResource(R.string.monday) -> color = Color.Red
+        stringResource(R.string.tuesday) -> color = Color.Blue
+        stringResource(R.string.wednesday) -> color = Color.Gray
+        stringResource(R.string.thursday) -> color = Color.Cyan
+        stringResource(R.string.friday) -> color = Color.Magenta
+        stringResource(R.string.saturday) -> color = Color.LightGray
+    }
+
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(
+            contentColor = color,
+            containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = appointment.namePatient
+            )
+            Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = appointment.dayAppointment
+            )
+            Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = appointment.timeAppointment
+            )
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                IconButton(
+                    onClick = { navController.navigate(Routes.Edit.createRoute(appointment.idAppointment)) }
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            text = it.namePatient
-                        )
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            text = it.dayAppointment
-                        )
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            text = it.timeAppointment
-                        )
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.edit)
+                    )
+                }
 
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            IconButton(
-                                onClick = { navController.navigate(Routes.Edit.createRoute(it.idAppointment)) }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = stringResource(R.string.edit)
-                                )
-                            }
-
-                            IconButton(
-                                onClick = {
-                                    viewModel.deleteAppointment(it)
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = stringResource(R.string.delete)
-                                )
-                            }
-                        }
+                IconButton(
+                    onClick = {
+                        viewModel.deleteAppointment(appointment)
                     }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.delete)
+                    )
                 }
             }
         }
     }
-
 }

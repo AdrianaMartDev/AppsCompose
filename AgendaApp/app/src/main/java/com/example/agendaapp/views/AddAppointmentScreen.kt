@@ -172,9 +172,11 @@ fun AddAppointmentContentView(
             expanded = showDays,
             onExpandedChange = {
                 showDays = !showDays
+                if(showDays){
+                    keyboardController?.hide()
+                }
             }
         ) {
-            keyboardController?.hide()
 
             TextField(
                 modifier = Modifier.menuAnchor(),
@@ -219,10 +221,11 @@ fun AddAppointmentContentView(
             expanded = showTime,
             onExpandedChange = {
                 showTime = !showTime
+                if(showTime){
+                    keyboardController?.hide()
+                }
             }
         ) {
-            keyboardController?.hide()
-
             TextField(
                 modifier = Modifier.menuAnchor(),
                 value = selectedTime,
