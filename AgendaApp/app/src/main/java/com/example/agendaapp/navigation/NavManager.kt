@@ -6,10 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.agendaapp.views.AddAppointmentScreen
+import com.example.agendaapp.ui.appointment.AddAppointmentScreen
 import com.example.agendaapp.viewmodels.AgendaViewModel
-import com.example.agendaapp.views.EditAppointmentScreen
-import com.example.agendaapp.views.HomeScreen
+import com.example.agendaapp.ui.appointment.EditAppointmentScreen
+import com.example.agendaapp.ui.home.HomeScreen
 
 const val ID_APPOINTMENT = "idAppointment"
 

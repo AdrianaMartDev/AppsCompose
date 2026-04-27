@@ -1,4 +1,4 @@
-package com.example.agendaapp.views
+package com.example.agendaapp.ui.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

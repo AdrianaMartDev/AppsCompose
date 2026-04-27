@@ -1,20 +1,16 @@
-package com.example.agendaapp.views
+package com.example.agendaapp.ui.appointment
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -39,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.agendaapp.R
 import com.example.agendaapp.models.Appointment
-import com.example.agendaapp.navigation.Routes
 import com.example.agendaapp.viewmodels.AgendaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
