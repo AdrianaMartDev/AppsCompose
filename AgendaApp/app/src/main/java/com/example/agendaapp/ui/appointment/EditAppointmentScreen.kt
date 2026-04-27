@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.agendaapp.R
+import com.example.agendaapp.ui.components.TopBarView
 import com.example.agendaapp.viewmodels.AgendaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,18 +40,7 @@ fun EditAppointmentScreen(
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.edit_appointment),
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            )
+            TopBarView(navController, R.string.edit_appointment)
         }
     ) {
         EditContentView(

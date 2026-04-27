@@ -33,7 +33,7 @@ fun AddAppointmentScreen(
 
     Scaffold(
         topBar = {
-            TopBarView(navController)
+            TopBarView(navController, R.string.add)
         }) {
         AddAppointmentContentView(
             it,

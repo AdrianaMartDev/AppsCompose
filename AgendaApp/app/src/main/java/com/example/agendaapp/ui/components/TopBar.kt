@@ -18,11 +18,14 @@ import com.example.agendaapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBarView(navController: NavController) {
+fun TopBarView(
+    navController: NavController,
+    label: Int
+) {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = stringResource(R.string.add_appointment),
+                text = stringResource(label),
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )
