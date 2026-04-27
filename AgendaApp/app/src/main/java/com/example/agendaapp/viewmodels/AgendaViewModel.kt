@@ -35,7 +35,7 @@ class AgendaViewModel(
         }
     }
 
-    fun addAppointment(appointment: Appointment) {
+    private fun addAppointment(appointment: Appointment) {
         viewModelScope.launch {
             dao.addAppointment(appointment)
         }
@@ -46,13 +46,22 @@ class AgendaViewModel(
 
         job?.cancel()
         job = viewModelScope.launch {
-            dao.getAppointment(idAppointment).collectLatest {
-                state = state.copy(appointment = it)
+            dao.getAppointment(idAppointment).collectLatest { appointment ->
+                if (appointment != null) {
+                    _formState.value = AppointmentFormState(
+                        id = appointment.idAppointment,
+                        name = appointment.namePatient,
+                        phone = appointment.phonePatient,
+                        subject = appointment.subject,
+                        day = appointment.dayAppointment,
+                        time = appointment.timeAppointment
+                    )
+                }
             }
         }
     }
 
-    fun updateAppointment(appointment: Appointment) {
+    private fun updateAppointment(appointment: Appointment) {
         viewModelScope.launch {
             dao.updateAppointment(appointment)
         }
@@ -84,7 +93,7 @@ class AgendaViewModel(
         _formState.update { it.copy(time = value) }
     }
 
-    fun saveAppointment() {
+    fun saveAppointment(idAppointment: String = "") {
         val state = _formState.value
 
         val appointment = Appointment(
@@ -96,6 +105,15 @@ class AgendaViewModel(
             timeAppointment = state.time
         )
 
-        addAppointment(appointment)
+        if (idAppointment.isEmpty()) {
+            addAppointment(appointment)
+        } else {
+            updateAppointment(appointment)
+        }
+        clearForm()
+    }
+
+    private fun clearForm() {
+        _formState.value = AppointmentFormState()
     }
 }

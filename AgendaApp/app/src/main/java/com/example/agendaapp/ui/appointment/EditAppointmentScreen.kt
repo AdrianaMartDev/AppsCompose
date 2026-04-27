@@ -4,21 +4,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +28,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.agendaapp.R
-import com.example.agendaapp.models.Appointment
 import com.example.agendaapp.viewmodels.AgendaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,24 +73,14 @@ fun EditContentView(
     LaunchedEffect(idAppointment) {
         viewModel.getAppointment(idAppointment)
     }
-    val state = viewModel.state
-    val appointment = state.appointment
 
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val formState by viewModel.formState.collectAsState()
 
-    var namePatient by remember(appointment) { mutableStateOf(appointment?.namePatient ?: "") }
-    var phonePatient by remember(appointment) { mutableStateOf(appointment?.phonePatient ?: "") }
-    var subject by remember(appointment) { mutableStateOf(appointment?.subject ?: "") }
+    val days = stringArrayResource(R.array.days_of_week)
+    val schedules = stringArrayResource(R.array.time_slots)
 
-    val dayList = stringArrayResource(R.array.days_of_week)
-    var selectedDay by remember { mutableStateOf(dayList[0]) }
     var showDays by remember { mutableStateOf(false) }
-
-    val schedulesList = stringArrayResource(R.array.time_slots)
-    var selectedTime by remember { mutableStateOf(schedulesList[0]) }
     var showTime by remember { mutableStateOf(false) }
-
-    val maxTel = 10
 
     Column(
         modifier = Modifier
@@ -107,153 +90,49 @@ fun EditContentView(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(
-            value = namePatient,
-            onValueChange = {
-                namePatient = it
-            },
-            label = {
-                Text(text = stringResource(R.string.name_of_patience))
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Text
-            )
+
+        AppTextField(
+            value = formState.name,
+            label = R.string.name_of_patience,
+            onValueChange = viewModel::onNameChange
+        )
+        AppTextField(
+            value = formState.subject,
+            label = R.string.subject,
+            onValueChange = viewModel::onSubjectChange
         )
 
-        OutlinedTextField(
-            value = phonePatient,
-            onValueChange = {
-                if (it.length <= maxTel) {
-                    phonePatient = it
-                }
-            },
-            label = {
-                Text(text = stringResource(R.string.phone_of_patience))
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number
-            )
+        AppTextField(
+            value = formState.phone,
+            label = R.string.phone_of_patience,
+            onValueChange = viewModel::onPhoneChange,
+            keyboardType = KeyboardType.Number
         )
 
-        OutlinedTextField(
-            value = subject,
-            onValueChange = {
-                subject = it
-            },
-            label = {
-                Text(text = stringResource(R.string.subject))
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number
-            )
-        )
-
-        ExposedDropdownMenuBox(
-            modifier = Modifier
-                .padding(horizontal = 30.dp)
-                .padding(
-                    bottom = 15.dp,
-                    top = 15.dp
-                ),
+        AppDropdown(
+            value = formState.day.ifEmpty { days[0] },
+            items = days,
             expanded = showDays,
             onExpandedChange = {
-                showDays = !showDays
-            }
-        ) {
-            keyboardController?.hide()
+                showDays = it
+            },
+            onItemSelected = viewModel::onDayChange
+        )
 
-            TextField(
-                modifier = Modifier.menuAnchor(),
-                value = selectedDay,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = showDays
-                    )
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors()
-            )
-
-            ExposedDropdownMenu(
-                expanded = showDays,
-                onDismissRequest = {
-                    showDays = false
-                }
-            ) {
-                dayList.forEachIndexed { index, s ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = s)
-                        },
-                        onClick = {
-                            if (s != dayList[0]) {
-                                selectedDay = s
-                            }
-                            showDays = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                    )
-                }
-            }
-        }
-
-        ExposedDropdownMenuBox(
-            modifier = Modifier
-                .padding(horizontal = 30.dp)
-                .padding(bottom = 15.dp),
+        AppDropdown(
+            value = formState.time.ifEmpty { schedules[0] },
+            items = schedules,
             expanded = showTime,
             onExpandedChange = {
-                showTime = !showTime
-            }
-        ) {
-            keyboardController?.hide()
+                showTime = it
+            },
+            onItemSelected = viewModel::onTimeChange
+        )
 
-            TextField(
-                modifier = Modifier.menuAnchor(),
-                value = selectedTime,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = showDays)
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors()
-            )
-
-            ExposedDropdownMenu(
-                expanded = showTime,
-                onDismissRequest = {
-                    showTime = false
-                }
-            ) {
-                schedulesList.forEachIndexed { index, s ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = s)
-                        },
-                        onClick = {
-                            if (s != schedulesList[0]) {
-                                selectedTime = s
-                            }
-                            showTime = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                    )
-                }
-            }
-        }
 
         Button(
             onClick = {
-                val appointment = Appointment(
-                    idAppointment = appointment?.idAppointment ?: "",
-                    namePatient = namePatient,
-                    phonePatient = phonePatient,
-                    subject = subject,
-                    dayAppointment = selectedDay,
-                    timeAppointment = selectedTime
-                )
-                viewModel.updateAppointment(appointment)
+                viewModel.saveAppointment(formState.id)
                 navController.popBackStack()
             }
         ) {
