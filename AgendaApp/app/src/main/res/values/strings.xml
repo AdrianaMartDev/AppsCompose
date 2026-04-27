@@ -15,8 +15,11 @@
     <string name="add_appointment">Add Appointment</string>
     <string name="back">Back</string>
     <string name="phone_of_patience">Phone of patience</string>
+    <string name="name_of_patience">Name of patience</string>
     <string name="subject">Subject</string>
     <string name="agend_appointment">Agend appointment</string>
+    <string name="edit_appointment">Edit Appointment</string>
+    <string name="update_appointment">Update appointment</string>
 
     <string-array name="days_of_week">
         <item>Select day</item>

@@ -122,7 +122,7 @@ fun AddAppointmentContentView(
                 namePatience = it
             },
             label = {
-                Text(text = stringResource(R.string.name_of_patience_to_search))
+                Text(text = stringResource(R.string.name_of_patience))
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text
@@ -136,7 +136,9 @@ fun AddAppointmentContentView(
                 .padding(bottom = 15.dp),
             value = phonePatience,
             onValueChange = {
-                phonePatience = it
+                if (it.length <= maxTel) {
+                    phonePatience = it
+                }
             },
             label = {
                 Text(text = stringResource(R.string.phone_of_patience))
@@ -144,7 +146,6 @@ fun AddAppointmentContentView(
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number
             ),
-            maxLines = maxTel
         )
 
         OutlinedTextField(
