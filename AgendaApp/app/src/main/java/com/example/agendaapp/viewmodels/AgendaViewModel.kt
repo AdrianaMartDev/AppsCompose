@@ -97,7 +97,7 @@ class AgendaViewModel(
         val state = _formState.value
 
         val appointment = Appointment(
-            idAppointment = System.currentTimeMillis().toString(),
+            idAppointment = idAppointment.ifEmpty { System.currentTimeMillis().toString() },
             namePatient = state.name,
             phonePatient = state.phone,
             subject = state.subject,
