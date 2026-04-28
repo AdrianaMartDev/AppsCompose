@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,9 +40,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.agendaapp.R
-import com.example.agendaapp.models.Appointment
-import com.example.agendaapp.navigation.Routes
-import com.example.agendaapp.viewmodels.AgendaViewModel
+import com.example.agendaapp.data.local.AppointmentEntity
+import com.example.agendaapp.ui.navigation.Routes
+import com.example.agendaapp.ui.appointment.AgendaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,7 +95,8 @@ fun HomeContentView(
     navController: NavController,
     viewModel: AgendaViewModel
 ) {
-    var namePatient by remember { mutableStateOf("") }
+    val namePatient by viewModel.search.collectAsState()
+
     Column(modifier = Modifier.padding(paddingValues)) {
         Row(
             modifier = Modifier
@@ -103,7 +105,7 @@ fun HomeContentView(
         ) {
             SearchComponent(
                 namePatient,
-                onSearchChange = { namePatient = it }
+                onSearchChange = viewModel::onSearchChange
             )
         }
         CreatedAppointments(viewModel, namePatient, navController)
@@ -142,22 +144,15 @@ fun CreatedAppointments(
     namePatient: String,
     navController: NavController
 ) {
-    val state = viewModel.state
+
+    val appointments by viewModel.filterAppointment.collectAsState()
 
     LazyColumn {
-        items(
-            state.appointmentList.filter {
-                it.namePatient.lowercase().contains(namePatient.lowercase())
-            }.sortedBy {
-                it.dayAppointment
-            }.sortedBy {
-                it.timeAppointment
-            }
-        ) { item ->
+        items(appointments) { item ->
             AppointmentInformation(
                 viewModel = viewModel,
                 navController = navController,
-                appointment = item
+                appointmentEntity = item
             )
         }
     }
@@ -167,11 +162,11 @@ fun CreatedAppointments(
 fun AppointmentInformation(
     viewModel: AgendaViewModel,
     navController: NavController,
-    appointment: Appointment
+    appointmentEntity: AppointmentEntity
 ) {
     var color: Color = Color.White
 
-    when (appointment.dayAppointment) {
+    when (appointmentEntity.dayAppointment) {
         stringResource(R.string.monday) -> color = Color.Red
         stringResource(R.string.tuesday) -> color = Color.Blue
         stringResource(R.string.wednesday) -> color = Color.Gray
@@ -200,20 +195,20 @@ fun AppointmentInformation(
         ) {
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = appointment.namePatient
+                text = appointmentEntity.namePatient
             )
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = appointment.dayAppointment
+                text = appointmentEntity.dayAppointment
             )
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = appointment.timeAppointment
+                text = appointmentEntity.timeAppointment
             )
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 IconButton(
-                    onClick = { navController.navigate(Routes.Edit.createRoute(appointment.idAppointment)) }
+                    onClick = { navController.navigate(Routes.Edit.createRoute(appointmentEntity.idAppointment)) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
@@ -223,7 +218,7 @@ fun AppointmentInformation(
 
                 IconButton(
                     onClick = {
-                        viewModel.deleteAppointment(appointment)
+                        viewModel.deleteAppointment(appointmentEntity)
                     }
                 ) {
                     Icon(

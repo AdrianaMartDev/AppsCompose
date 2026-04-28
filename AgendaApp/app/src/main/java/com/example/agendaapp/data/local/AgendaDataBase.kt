@@ -1,11 +1,10 @@
-package com.example.agendaapp.room
+package com.example.agendaapp.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.agendaapp.models.Appointment
 
 @Database(
-    entities =[Appointment::class],
+    entities =[AppointmentEntity::class],
     version = 1,
     exportSchema = false
 )

@@ -1,4 +1,4 @@
-package com.example.agendaapp.navigation
+package com.example.agendaapp.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.agendaapp.ui.appointment.AddAppointmentScreen
-import com.example.agendaapp.viewmodels.AgendaViewModel
+import com.example.agendaapp.ui.appointment.AgendaViewModel
 import com.example.agendaapp.ui.appointment.EditAppointmentScreen
 import com.example.agendaapp.ui.home.HomeScreen
 

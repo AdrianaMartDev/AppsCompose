@@ -1,4 +1,4 @@
-package com.example.agendaapp.ui.components
+package com.example.agendaapp.ui.appointment.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack

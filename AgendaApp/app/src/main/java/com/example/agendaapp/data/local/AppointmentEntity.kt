@@ -1,11 +1,11 @@
-package com.example.agendaapp.models
+package com.example.agendaapp.data.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "appointment")
-data class Appointment (
+data class AppointmentEntity (
     @PrimaryKey(autoGenerate = false)
     val idAppointment:String,
 

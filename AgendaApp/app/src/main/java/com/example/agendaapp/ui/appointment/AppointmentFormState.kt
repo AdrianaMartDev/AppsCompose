@@ -1,4 +1,4 @@
-package com.example.agendaapp.state
+package com.example.agendaapp.ui.appointment
 
 data class AppointmentFormState(
     val id: String = "",

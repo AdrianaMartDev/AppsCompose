@@ -1,4 +1,4 @@
-package com.example.agendaapp.navigation
+package com.example.agendaapp.ui.navigation
 
 sealed class Routes(val rout: String) {
     object Home : Routes("home")

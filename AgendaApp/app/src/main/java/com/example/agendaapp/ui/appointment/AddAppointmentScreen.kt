@@ -22,8 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.agendaapp.R
-import com.example.agendaapp.viewmodels.AgendaViewModel
-import com.example.agendaapp.ui.components.TopBarView
+import com.example.agendaapp.ui.appointment.components.TopBarView
 
 @Composable
 fun AddAppointmentScreen(
