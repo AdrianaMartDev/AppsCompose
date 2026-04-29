@@ -4,7 +4,7 @@ sealed class Routes(
     val route: String
 ) {
     object SplashScreen : Routes("splash")
-    object HomeScreen : Routes("home")
+    object LoginScreen : Routes("login")
     object MenuScreen: Routes("menu")
     object UsersScreen: Routes("users")
     object authorsScreen: Routes("authors")
