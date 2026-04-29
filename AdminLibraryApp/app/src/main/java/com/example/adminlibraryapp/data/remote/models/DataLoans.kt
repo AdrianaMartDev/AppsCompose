@@ -2,7 +2,7 @@ package com.example.adminlibraryapp.data.remote.models
 
 import com.google.gson.annotations.SerializedName
 
-data class DataLends(
+data class DataLoans(
     @SerializedName("id_prestamo")
     val lendId: String,
     @SerializedName("isbn")
