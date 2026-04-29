@@ -1,4 +1,4 @@
-package com.example.adminlibraryapp.ui.theme
+package com.example.adminlibraryapp.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
