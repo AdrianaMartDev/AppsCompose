@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.adminlibraryapp.presentation.ui.LibraryViewModel
 import com.example.adminlibraryapp.presentation.ui.home.LoginScreen
 import com.example.adminlibraryapp.presentation.ui.home.SplashScreen
+import com.example.adminlibraryapp.presentation.ui.menu.MenuScreen
 
 @Composable
 fun NavManager(
@@ -26,7 +27,7 @@ fun NavManager(
         }
 
         composable(Routes.MenuScreen.route) {
-            MenuScreen(navController, viewModel)
+            MenuScreen(navController)
         }
 
         composable(Routes.UsersScreen.route) {
