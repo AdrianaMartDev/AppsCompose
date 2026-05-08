@@ -5,9 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.adminlibraryapp.data.remote.models.DataAdminUser
 import com.example.adminlibraryapp.domain.repository.LoginRepository
 import com.example.adminlibraryapp.domain.repository.Resource
+import com.example.adminlibraryapp.presentation.ui.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +19,7 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _adminUserResp = MutableStateFlow(LoginState())
-    val adminUserResp: StateFlow<LoginState> = _adminUserResp
+    val adminUserResp = _adminUserResp.asStateFlow()
 
     fun login(userId: String, password: String) {
         viewModelScope.launch {
@@ -48,8 +49,6 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                 }
-
-                else -> LoginState()
             }
         }
     }

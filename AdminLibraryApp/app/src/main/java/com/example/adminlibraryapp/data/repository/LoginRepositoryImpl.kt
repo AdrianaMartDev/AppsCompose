@@ -20,7 +20,7 @@ class LoginRepositoryImpl @Inject constructor(
                 Resource.Error("HTTP ${response.code()}")
             }
         } catch (e: Exception) {
-            Resource.Error("Error de red")
+            Resource.Error("Error $e")
         }
     }
 }
