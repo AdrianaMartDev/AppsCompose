@@ -1,7 +1,6 @@
 package com.example.adminlibraryapp.data.remote.response
 
 import com.example.adminlibraryapp.data.remote.models.DataAuthor
-import com.example.adminlibraryapp.data.remote.models.DataUsers
 import com.google.gson.annotations.SerializedName
 
 data class AuthorResponse(

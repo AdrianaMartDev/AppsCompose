@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class DataAuthor(
     @SerializedName("id_autor")
-    val authorId: String = "",
+    var authorId: String = "",
     @SerializedName("nom_autor")
-    val authorName: String = "",
+    var authorName: String = "",
 ){
     override fun toString(): String {
         return "$authorId, $authorName"
