@@ -1,6 +1,6 @@
 package com.example.adminlibraryapp.data.remote.response
 
-import com.example.adminlibraryapp.data.remote.models.DataUsers
+import com.example.adminlibraryapp.data.remote.models.DataCategories
 import com.google.gson.annotations.SerializedName
 
 data class CategoryResponse(
@@ -9,5 +9,5 @@ data class CategoryResponse(
     @SerializedName("mensaje")
     var message: String,
     @SerializedName("data")
-    var data: List<DataUsers> = emptyList()
+    var data: List<DataCategories> = emptyList()
 )

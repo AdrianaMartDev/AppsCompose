@@ -6,7 +6,7 @@ data class DataCategories(
     @SerializedName("id_categoria")
     val categoryId: String = "",
     @SerializedName("nom_categoria")
-    val categoryName: String
+    val categoryName: String = ""
 ) {
     override fun toString(): String {
         return "$categoryId, $categoryName"

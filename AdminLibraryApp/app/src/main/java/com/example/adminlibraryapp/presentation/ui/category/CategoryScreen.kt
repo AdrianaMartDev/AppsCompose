@@ -1,4 +1,4 @@
-package com.example.adminlibraryapp.presentation.ui.author
+package com.example.adminlibraryapp.presentation.ui.category
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,137 +40,142 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.adminlibraryapp.R
-import com.example.adminlibraryapp.data.remote.models.DataAuthor
-import com.example.adminlibraryapp.presentation.ui.state.AuthorState
+import com.example.adminlibraryapp.data.remote.models.DataCategories
+import com.example.adminlibraryapp.presentation.ui.state.CategoryState
 
-enum class AuthorDialogMode {
+enum class CategoryDialogMode {
     ADD,
     EDIT
 }
 
 @Composable
-fun AuthorsRoute(
-    viewModel: AuthorViewModel = hiltViewModel()
+fun CategoryRoute(
+    viewModel: CategoryViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
-    AuthorsScreen(
+    CategoryScreen(
         state = state,
-        onAdd = viewModel::addAuthor,
-        onUpdate = viewModel::updateAuthor,
-        onDelete = viewModel::deleteAuthor
+        onAdd = viewModel::addCategory,
+        onUpdate = viewModel::updateCategory,
+        onDelete = viewModel::deleteCategory
     )
 }
 
 @Composable
-fun AuthorsScreen(
-    state: AuthorState,
-    onAdd: (DataAuthor) -> Unit,
-    onUpdate: (DataAuthor) -> Unit,
-    onDelete: (DataAuthor) -> Unit
+fun CategoryScreen(
+    state: CategoryState,
+    onAdd: (DataCategories) -> Unit,
+    onUpdate: (DataCategories) -> Unit,
+    onDelete: (DataCategories) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    var dialogMode by remember { mutableStateOf(AuthorDialogMode.ADD) }
-    var selectedAuthor by remember { mutableStateOf<DataAuthor?>(null) }
+    var dialogMode by remember { mutableStateOf(CategoryDialogMode.ADD) }
+    var selectedCategory by remember { mutableStateOf<DataCategories?>(null) }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    dialogMode = AuthorDialogMode.ADD
-                    selectedAuthor = null
+                    dialogMode = CategoryDialogMode.ADD
                     showDialog = true
+                    // selectedCategory = null
                 },
                 containerColor = colorResource(R.color.morado_oscuro),
                 contentColor = Color.White
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add Author"
+                    contentDescription = "Add Category"
                 )
             }
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { padding ->
-        AuthorsContent(
-            modifier = Modifier.padding(padding),
-            state = state,
-            onEdit = { author ->
-                dialogMode = AuthorDialogMode.EDIT
-                selectedAuthor = author
-                showDialog = true
-            },
-            onDelete = onDelete
-        )
-
         if (showDialog) {
-            AuthorDialog(
+            CategoryDialog(
                 mode = dialogMode,
-                author = selectedAuthor,
+                category = selectedCategory,
+                onDismiss = {
+                    showDialog = false
+                },
                 onConfirm = { name ->
                     when (dialogMode) {
-                        AuthorDialogMode.ADD -> {
+                        CategoryDialogMode.ADD -> {
                             onAdd(
-                                DataAuthor(
-                                    authorId = System.currentTimeMillis().toString(),
-                                    authorName = name
+                                DataCategories(
+                                    categoryId = System.currentTimeMillis().toString(),
+                                    categoryName = name
                                 )
                             )
                         }
 
-                        AuthorDialogMode.EDIT -> {
-                            selectedAuthor?.let {
+                        CategoryDialogMode.EDIT -> {
+                            selectedCategory?.let {
                                 onUpdate(
                                     it.copy(
-                                        authorName = name
+                                        categoryName = name
                                     )
                                 )
                             }
                         }
                     }
-                },
-                onDismiss = {
-                    showDialog = false
                 }
             )
         }
+
+        CategoryContent(
+            modifier = Modifier.padding(padding),
+            state = state,
+            onEdit = { category ->
+                dialogMode = CategoryDialogMode.EDIT
+                selectedCategory = category
+                showDialog = true
+            },
+            onDelete = onDelete
+        )
     }
 }
 
 @Composable
-fun AuthorsContent(
+fun CategoryContent(
     modifier: Modifier,
-    state: AuthorState,
-    onEdit: (DataAuthor) -> Unit,
-    onDelete: (DataAuthor) -> Unit
+    state: CategoryState,
+    onEdit: (DataCategories) -> Unit,
+    onDelete: (DataCategories) -> Unit
 ) {
-    LazyColumn(
+
+    Column(
         modifier = modifier
             .fillMaxSize()
             .padding(4.dp)
     ) {
-        items(
-            state.data,
-            key = { it.authorId }) { author ->
-            AuthorCard(
-                author = author,
-                onEdit = {
-                    onEdit(author)
-                },
-                onDelete = {
-                    onDelete(author)
-                }
-            )
+        LazyColumn(
+            modifier = Modifier
+                .padding(4.dp)
+        ) {
+            items(
+                items = state.data,
+                key = { it.categoryId }) { category ->
+                CategoryCard(
+                    category = category,
+                    onEdit = {
+                        onEdit(category)
+                    },
+                    onDelete = {
+                        onDelete(category)
+                    }
+                )
+            }
         }
-
     }
 }
 
 @Composable
-fun AuthorCard(
-    author: DataAuthor,
-    onEdit: (DataAuthor) -> Unit = {},
-    onDelete: (DataAuthor) -> Unit = {}
+fun CategoryCard(
+    category: DataCategories,
+    onEdit: (DataCategories) -> Unit = {},
+    onDelete: (DataCategories) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -176,40 +183,34 @@ fun AuthorCard(
             .padding(12.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
+            defaultElevation = 9.dp
         )
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier
                     .padding(start = 12.dp)
                     .weight(2f),
-                text = author.authorName
+                text = category.categoryName
             )
-
-            IconButton(
-                onClick = {
-                    onEdit(author)
-                }
-            ) {
+            IconButton(onClick = {
+                onEdit(category)
+            }) {
                 Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Edit"
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edit Category"
                 )
             }
 
-            IconButton(
-                onClick = {
-                    onDelete(author)
-                }
-            ) {
+            IconButton(onClick = {
+                onDelete(category)
+            }) {
                 Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "delete"
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Category"
                 )
             }
         }
@@ -217,39 +218,43 @@ fun AuthorCard(
 }
 
 @Composable
-fun AuthorDialog(
-    mode: AuthorDialogMode,
-    author: DataAuthor?,
+fun CategoryDialog(
+    mode: CategoryDialogMode,
+    category: DataCategories?,
     onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit,
+    onConfirm: (String) -> Unit
 ) {
-    var authorName by remember(author?.authorId) {
-        mutableStateOf(author?.authorName ?: "")
+    var categoryName by remember(category?.categoryId) {
+        mutableStateOf(category?.categoryName ?: "")
     }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = if (mode == AuthorDialogMode.ADD) "Add Author" else "Edit Author")
+            Text(
+                text = if (mode == CategoryDialogMode.ADD) "Add Category" else "Edit Category"
+            )
         },
         text = {
             Column(verticalArrangement = Arrangement.Center) {
                 OutlinedTextField(
-                    value = authorName,
-                    onValueChange = {
-                        authorName = it
+                    value = categoryName,
+                    onValueChange = { categoryName = it },
+                    label = {
+                        Text(text = "Category Name")
                     },
-                    label = { Text(text = "Author") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text
+                    )
                 )
             }
         },
         confirmButton = {
             Button(
                 onClick = {
-                    onConfirm(authorName)
+                    onConfirm(categoryName)
                 },
-                enabled = authorName.isNotBlank(),
+                enabled = categoryName.isNotBlank(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(R.color.verde_oscuro)
                 )
@@ -275,3 +280,4 @@ fun AuthorDialog(
         }
     )
 }
+
