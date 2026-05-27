@@ -11,6 +11,8 @@ import com.example.adminlibraryapp.presentation.ui.category.CategoryRoute
 import com.example.adminlibraryapp.presentation.ui.home.LoginScreen
 import com.example.adminlibraryapp.presentation.ui.home.SplashScreen
 import com.example.adminlibraryapp.presentation.ui.menu.MenuScreen
+import com.example.adminlibraryapp.presentation.ui.users.UserRoute
+import com.example.adminlibraryapp.presentation.ui.users.UserScreen
 
 @Composable
 fun NavManager(
@@ -34,7 +36,7 @@ fun NavManager(
         }
 
         composable(Routes.UsersScreen.route) {
-            UsersScreen()
+            UserRoute()
         }
 
         composable(Routes.authorsScreen.route) {
