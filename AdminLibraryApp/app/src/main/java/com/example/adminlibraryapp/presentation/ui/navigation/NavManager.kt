@@ -10,6 +10,7 @@ import com.example.adminlibraryapp.presentation.ui.category.CategoryRoute
 import com.example.adminlibraryapp.presentation.ui.editorial.EditorialRoute
 import com.example.adminlibraryapp.presentation.ui.home.LoginScreen
 import com.example.adminlibraryapp.presentation.ui.home.SplashScreen
+import com.example.adminlibraryapp.presentation.ui.loan.LoanRoute
 import com.example.adminlibraryapp.presentation.ui.menu.MenuScreen
 import com.example.adminlibraryapp.presentation.ui.users.UserRoute
 
@@ -54,7 +55,7 @@ fun NavManager(
         }
 
         composable(Routes.lendScreen.route) {
-            LendScreen()
+            LoanRoute()
         }
 
     }
