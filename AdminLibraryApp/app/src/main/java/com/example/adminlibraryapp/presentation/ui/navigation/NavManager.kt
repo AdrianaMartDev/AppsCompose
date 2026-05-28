@@ -6,13 +6,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.adminlibraryapp.presentation.ui.LibraryViewModel
 import com.example.adminlibraryapp.presentation.ui.author.AuthorsRoute
-import com.example.adminlibraryapp.presentation.ui.author.AuthorsScreen
 import com.example.adminlibraryapp.presentation.ui.category.CategoryRoute
+import com.example.adminlibraryapp.presentation.ui.editorial.EditorialRoute
 import com.example.adminlibraryapp.presentation.ui.home.LoginScreen
 import com.example.adminlibraryapp.presentation.ui.home.SplashScreen
 import com.example.adminlibraryapp.presentation.ui.menu.MenuScreen
 import com.example.adminlibraryapp.presentation.ui.users.UserRoute
-import com.example.adminlibraryapp.presentation.ui.users.UserScreen
 
 @Composable
 fun NavManager(
@@ -47,7 +46,7 @@ fun NavManager(
             CategoryRoute()
         }
         composable(Routes.editorialsScreen.route) {
-            EditorialsScreen()
+            EditorialRoute()
         }
 
         composable(Routes.booksScreen.route) {
