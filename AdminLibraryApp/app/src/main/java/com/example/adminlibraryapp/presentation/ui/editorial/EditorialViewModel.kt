@@ -3,7 +3,7 @@ package com.example.adminlibraryapp.presentation.ui.editorial
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.adminlibraryapp.data.remote.models.DataEditorials
-import com.example.adminlibraryapp.data.repository.EditorialRepositoryImpl
+import com.example.adminlibraryapp.domain.repository.EditorialRepository
 import com.example.adminlibraryapp.domain.repository.Resource
 import com.example.adminlibraryapp.presentation.ui.state.EditorialState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EditorialViewModel @Inject constructor(
-    private val editorialRepository: EditorialRepositoryImpl
+    private val editorialRepository: EditorialRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(EditorialState())
