@@ -3,7 +3,7 @@ package com.example.adminlibraryapp.presentation.ui.loan
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.adminlibraryapp.data.remote.models.DataLoans
-import com.example.adminlibraryapp.data.repository.LoanRepositoryImpl
+import com.example.adminlibraryapp.domain.repository.LoanRepository
 import com.example.adminlibraryapp.domain.repository.Resource
 import com.example.adminlibraryapp.presentation.ui.state.LoanState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoanViewModel @Inject constructor(
-    private val repository: LoanRepositoryImpl
+    private val repository: LoanRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoanState())
