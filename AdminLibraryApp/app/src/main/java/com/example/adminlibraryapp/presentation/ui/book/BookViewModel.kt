@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.adminlibraryapp.data.remote.models.DataBooks
 import com.example.adminlibraryapp.data.remote.models.DataLoans
-import com.example.adminlibraryapp.data.repository.AuthorsRepositoryImpl
-import com.example.adminlibraryapp.data.repository.BookRepositoryImpl
-import com.example.adminlibraryapp.data.repository.CategoryRepositoryImpl
-import com.example.adminlibraryapp.data.repository.EditorialRepositoryImpl
-import com.example.adminlibraryapp.data.repository.LoanRepositoryImpl
+import com.example.adminlibraryapp.data.remote.response.BookResponse
+import com.example.adminlibraryapp.domain.repository.AuthorsRepository
+import com.example.adminlibraryapp.domain.repository.BookRepository
+import com.example.adminlibraryapp.domain.repository.CategoryRepository
+import com.example.adminlibraryapp.domain.repository.EditorialRepository
+import com.example.adminlibraryapp.domain.repository.LoanRepository
 import com.example.adminlibraryapp.domain.repository.Resource
 import com.example.adminlibraryapp.presentation.ui.state.BookState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,11 +21,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookViewModel @Inject constructor(
-    private val bookRepository: BookRepositoryImpl,
-    private val loanRepository: LoanRepositoryImpl,
-    private val authorRepository: AuthorsRepositoryImpl,
-    private val categoryRepository: CategoryRepositoryImpl,
-    private val editorialRepository: EditorialRepositoryImpl
+    private val bookRepository: BookRepository,
+    private val loanRepository: LoanRepository,
+    private val authorRepository: AuthorsRepository,
+    private val categoryRepository: CategoryRepository,
+    private val editorialRepository: EditorialRepository
 ) :
     ViewModel() {
 
@@ -36,7 +37,7 @@ class BookViewModel @Inject constructor(
     }
 
 
-    fun loadInitialData() {
+    private fun loadInitialData() {
         viewModelScope.launch {
             showLoading()
             val books = async { bookRepository.getBooks() }
@@ -79,76 +80,36 @@ class BookViewModel @Inject constructor(
     private fun getBooks() {
         viewModelScope.launch {
             showLoading()
-            when (val response = bookRepository.getBooks()) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        books = response.data.data,
-                        error = ""
-                    )
-                }
-
-                is Resource.Error -> {
-                    showError(response.message)
-                }
-            }
+            handleBookResponse(
+                bookRepository.getBooks()
+            )
         }
     }
 
     fun addBook(book: DataBooks) {
         viewModelScope.launch {
             showLoading()
-            when (val response = bookRepository.addBook(book)) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        books = response.data.data,
-                        error = ""
-                    )
-                }
-
-                is Resource.Error -> {
-                    showError(response.message)
-                }
-            }
+            handleBookResponse(
+                bookRepository.addBook(book)
+            )
         }
     }
 
     fun editBook(book: DataBooks) {
         viewModelScope.launch {
             showLoading()
-            when (val response = bookRepository.updateBook(book)) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        books = response.data.data,
-                        error = ""
-                    )
-                }
-
-                is Resource.Error -> {
-                    showError(response.message)
-                }
-            }
+            handleBookResponse(
+                bookRepository.updateBook(book)
+            )
         }
     }
 
     fun deleteBook(book: DataBooks) {
         viewModelScope.launch {
             showLoading()
-            when (val response = bookRepository.deleteBook(book)) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        books = response.data.data,
-                        error = ""
-                    )
-                }
-
-                is Resource.Error -> {
-                    showError(response.message)
-                }
-            }
+            handleBookResponse(
+                bookRepository.deleteBook(book)
+            )
         }
     }
 
@@ -158,7 +119,6 @@ class BookViewModel @Inject constructor(
             when (val response = loanRepository.addLoan(loan)) {
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
-                        isLoading = false,
                         loans = response.data.data,
                         error = ""
                     )
@@ -168,6 +128,24 @@ class BookViewModel @Inject constructor(
                 is Resource.Error -> {
                     showError(response.message)
                 }
+            }
+        }
+    }
+
+    private fun handleBookResponse(
+        response: Resource<BookResponse>
+    ) {
+        when (response) {
+            is Resource.Success -> {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    books = response.data.data,
+                    error = ""
+                )
+            }
+
+            is Resource.Error -> {
+                showError(response.message)
             }
         }
     }
