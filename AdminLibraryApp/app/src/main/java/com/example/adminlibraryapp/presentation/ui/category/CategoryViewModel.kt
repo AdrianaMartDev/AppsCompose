@@ -3,7 +3,7 @@ package com.example.adminlibraryapp.presentation.ui.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.adminlibraryapp.data.remote.models.DataCategories
-import com.example.adminlibraryapp.data.repository.CategoryRepositoryImpl
+import com.example.adminlibraryapp.domain.repository.CategoryRepository
 import com.example.adminlibraryapp.domain.repository.Resource
 import com.example.adminlibraryapp.presentation.ui.state.CategoryState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CategoryViewModel @Inject constructor(private val repositoryImpl: CategoryRepositoryImpl) :
+class CategoryViewModel @Inject constructor(private val repository: CategoryRepository) :
     ViewModel() {
 
     private val _state = MutableStateFlow(CategoryState())
@@ -27,7 +27,7 @@ class CategoryViewModel @Inject constructor(private val repositoryImpl: Category
     fun getCategories() {
         viewModelScope.launch {
             setLoading()
-            when (val result = repositoryImpl.getCategories()) {
+            when (val result = repository.getCategories()) {
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
@@ -49,7 +49,7 @@ class CategoryViewModel @Inject constructor(private val repositoryImpl: Category
         viewModelScope.launch {
             setLoading()
 
-            when (val result = repositoryImpl.addCategory(category)) {
+            when (val result = repository.addCategory(category)) {
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
@@ -71,7 +71,7 @@ class CategoryViewModel @Inject constructor(private val repositoryImpl: Category
         setLoading()
 
         viewModelScope.launch {
-            when (val result = repositoryImpl.deleteCategory(category)) {
+            when (val result = repository.deleteCategory(category)) {
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
@@ -92,7 +92,7 @@ class CategoryViewModel @Inject constructor(private val repositoryImpl: Category
 
     fun updateCategory(category: DataCategories) {
         viewModelScope.launch {
-            when (val result = repositoryImpl.updateCategory(category)) {
+            when (val result = repository.updateCategory(category)) {
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
