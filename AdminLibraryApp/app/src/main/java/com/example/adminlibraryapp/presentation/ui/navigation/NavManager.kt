@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.adminlibraryapp.presentation.ui.LibraryViewModel
 import com.example.adminlibraryapp.presentation.ui.author.AuthorsRoute
 import com.example.adminlibraryapp.presentation.ui.book.BookRoute
 import com.example.adminlibraryapp.presentation.ui.category.CategoryRoute
@@ -17,7 +16,6 @@ import com.example.adminlibraryapp.presentation.ui.users.UserRoute
 
 @Composable
 fun NavManager(
-    viewModel: LibraryViewModel
 ) {
     val navController = rememberNavController()
     NavHost(
