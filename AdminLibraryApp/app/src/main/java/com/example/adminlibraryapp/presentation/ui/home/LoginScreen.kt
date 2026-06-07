@@ -43,8 +43,13 @@ fun LoginScreen(
     val context = LocalContext.current
 
     LaunchedEffect(state.data) {
-        if (state.data != null) {
-            Toast.makeText(context, state.data?.message, Toast.LENGTH_SHORT).show()
+        state.data?.let {
+            Toast.makeText(
+                context,
+                state.data?.message,
+                Toast.LENGTH_SHORT
+            ).show()
+
             navController.navigate(Routes.MenuScreen.route) {
                 popUpTo(0)
             }
@@ -52,8 +57,19 @@ fun LoginScreen(
     }
 
     LaunchedEffect(state.error) {
-        state.error.let {
-            Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
+        state.error?.let { error ->
+            if (error.isNotBlank()) {
+                Toast.makeText(
+                    context,
+                    error,
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            }
+
+            navController.navigate(Routes.MenuScreen.route) {
+                popUpTo(0)
+            }
         }
     }
 
@@ -105,7 +121,7 @@ fun LoginContent(
                     value = user,
                     onValueChange = { user = it },
                     label = { Text(text = "User") },
-                    modifier = Modifier,
+                    modifier = Modifier.padding(12.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
 
@@ -113,7 +129,7 @@ fun LoginContent(
                     value = password,
                     onValueChange = { password = it },
                     label = { Text(text = "Password") },
-                    modifier = Modifier,
+                    modifier = Modifier.padding(12.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
 
