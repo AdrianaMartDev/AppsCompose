@@ -7,8 +7,4 @@ data class DataAuthor(
     var authorId: String = "",
     @SerializedName("nom_autor")
     var authorName: String = "",
-){
-    override fun toString(): String {
-        return "$authorId, $authorName"
-    }
-}
+)

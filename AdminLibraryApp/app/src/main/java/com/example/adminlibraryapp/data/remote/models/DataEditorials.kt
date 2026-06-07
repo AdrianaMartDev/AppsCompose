@@ -7,8 +7,4 @@ data class DataEditorials(
     val editorialId: String,
     @SerializedName("nom_editorial")
     val editorialName: String
-) {
-    override fun toString(): String {
-        return "$editorialId, $editorialName"
-    }
-}
+)
