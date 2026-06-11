@@ -1,4 +1,4 @@
-package com.example.admrestaurant.ui.theme
+package com.example.admrestaurant.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
