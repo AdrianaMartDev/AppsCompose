@@ -7,4 +7,21 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Basic -->
+    <color name="green">#5ab507</color>
+    <color name="dark_gray">#404040</color>
+    <color name="light_gray">#E7E7E7</color>
+
+    <!-- Palette -->
+    <color name="hidden_stream">#606c48</color>
+    <color name="atlantic_blue">#31608e</color>
+    <color name="rose_path">#be7c8a</color>
+    <color name="princess_purple">#a65081</color>
+    <color name="ember">#C85540</color>
+    <color name="winter_breeze">#BEC3C9</color>
+    <color name="secret_love">#F1EAE0</color>
+    <color name="sunflower_petal">#EDC36D</color>
+    <color name="golden_valley">#DFA712</color>
+    <color name="infinite_sea">#575755</color>
 </resources>

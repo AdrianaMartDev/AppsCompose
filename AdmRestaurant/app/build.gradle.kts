@@ -40,6 +40,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.ui.tooling.preview)
 
     // Compose
     val composeBom = platform(libs.compose.bom)
@@ -56,6 +57,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
+    debugImplementation(libs.androidx.ui.tooling)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
