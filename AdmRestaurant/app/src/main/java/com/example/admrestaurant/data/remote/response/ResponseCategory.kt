@@ -1,10 +1,9 @@
 package com.example.admrestaurant.data.remote.response
 
-import com.google.gson.annotations.SerializedName
+import com.example.admrestaurant.data.remote.model.DataCategory
 
 data class ResponseCategory(
-    @SerializedName("nom_categoria")
-    var nameCategory: String = "",
-    @SerializedName("img_categoria")
-    var imageCategory: String = ""
+    val codigo: String,
+    val mensaje: String,
+    val datos: List<DataCategory>
 )
