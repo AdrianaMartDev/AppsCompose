@@ -12,7 +12,7 @@ fun DataDish.toDomain(): Dish {
     )
 }
 
-fun DataDish.toData(): DataDish {
+fun Dish.toData(): DataDish {
     return DataDish(
         nameDish = nameDish,
         descDish = descDish,
