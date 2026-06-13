@@ -11,3 +11,12 @@ fun DataDish.toDomain(): Dish {
         category = category
     )
 }
+
+fun DataDish.toData(): DataDish {
+    return DataDish(
+        nameDish = nameDish,
+        descDish = descDish,
+        priceDish = priceDish,
+        category = category
+    )
+}
