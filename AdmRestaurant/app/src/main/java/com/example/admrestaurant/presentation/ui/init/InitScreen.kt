@@ -1,4 +1,4 @@
-package com.example.admrestaurant.presentation.ui
+package com.example.admrestaurant.presentation.ui.init
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
