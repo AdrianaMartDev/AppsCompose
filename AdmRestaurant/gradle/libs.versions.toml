@@ -10,6 +10,7 @@ navigationCompose      = "2.8.5"
 retrofit               = "2.11.0"
 okhttp                 = "4.12.0"
 glide                  = "4.16.0"
+glideCompose           = "1.0.0-beta07"
 
 # Testing
 junit                  = "4.13.2"
@@ -44,7 +45,7 @@ okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor",
 
 # Glide
 glide     = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "glide" }
+glide-compose = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glideCompose" }
 
 # Testing
 junit              = { group = "junit", name = "junit", version.ref = "junit" }

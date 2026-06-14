@@ -68,7 +68,7 @@ dependencies {
 
     // Glide
     implementation(libs.glide)
-    ksp(libs.glide.ksp)
+    implementation(libs.glide.compose)
 
     // Testing
     testImplementation(libs.junit)
