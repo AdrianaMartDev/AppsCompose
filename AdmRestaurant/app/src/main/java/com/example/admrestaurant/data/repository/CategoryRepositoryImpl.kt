@@ -16,12 +16,12 @@ class CategoryRepositoryImpl @Inject constructor(
             .map { response -> response.datos.map { it.toDomain() } }
     }
 
-    override suspend fun addCategories(nameCategory: String): Result<List<Category>> {
+    override suspend fun addCategories(nameCategory: String): Result<Unit> {
         return safeApiCall { service.addCategory(nameCategory) }
             .map { response -> response.datos.map { it.toDomain() } }
     }
 
-    override suspend fun deleteCategories(nameCategory: String): Result<List<Category>> {
+    override suspend fun deleteCategories(nameCategory: String): Result<Unit> {
         return safeApiCall { service.deleteCategory(nameCategory) }
             .map { response -> response.datos.map { it.toDomain() } }
     }
