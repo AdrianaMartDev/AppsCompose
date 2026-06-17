@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/28822072/README.md)
 # 📱 AppsCompose
 
 A collection of Android applications built with **Jetpack Compose** and modern Android architecture patterns, developed as part of an ongoing journey to deepen expertise in Kotlin, Clean Architecture, and the Android Jetpack ecosystem.
@@ -7,17 +6,22 @@ A collection of Android applications built with **Jetpack Compose** and modern A
 
 ## 📂 Projects
 
-### 🍽️ AdmRestaurant *(In progress)*
-> Restaurant administration app
+### 🍽️ AdmRestaurant
+> Restaurant administration app with full CRUD
 
 | | |
 |---|---|
 | **Architecture** | MVI + Clean Architecture |
 | **DI** | Hilt |
 | **UI** | Jetpack Compose |
-| **Data** | REST API consumption |
+| **Data** | REST API consumption (custom backend with SQL Server Express) |
 
-A restaurant management application being built with **MVI (Model-View-Intent)** to explore unidirectional data flow at scale. Planned features include menu management, orders, and table administration backed by a custom REST API.
+A restaurant management application built from scratch with **MVI (Model-View-Intent)** to explore unidirectional data flow at scale. Features full **CRUD operations** for:
+
+- 🏷️ Categories
+- 🍔 Dishes
+
+Built on a self-hosted backend (Node.js + SQL Server Express) designed alongside the app. Demonstrates a complete MVI implementation: sealed `Intent` classes, immutable `State`, single-entry-point ViewModels, and parallel data loading with `async`/`await`. Includes mappers between API DTOs and domain models, a centralized `safeApiCall` wrapper using Kotlin's `Result` for error handling, and Compose forms with dynamic validation (`derivedStateOf`, `ExposedDropdownMenuBox`, dialog-based add/edit flows).
 
 ---
 
