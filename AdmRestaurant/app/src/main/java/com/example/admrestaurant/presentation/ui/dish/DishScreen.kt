@@ -24,6 +24,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -223,12 +224,13 @@ fun DialogDishAddEdit(
                         .padding(top = 8.dp),
                     expanded = formState.showCategory,
                     onExpandedChange = {
-                        formState = formState.copy(showCategory = !it)
+                        formState = formState.copy(showCategory = it)
                     }
                 ) {
                     OutlinedTextField(
                         modifier = Modifier
-                            .menuAnchor(),
+                            .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                            .fillMaxWidth(),
                         value = formState.categoryDish,
                         onValueChange = {},
                         readOnly = true,
