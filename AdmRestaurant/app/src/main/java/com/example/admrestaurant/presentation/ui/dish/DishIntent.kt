@@ -7,4 +7,6 @@ sealed class DishIntent {
     data class AddDish(val dish: Dish) : DishIntent()
     data class UpdateDish(val nameDish: String, val dish: Dish) : DishIntent()
     data class DeleteDish(val nameDish: String) : DishIntent()
+    data class GenerateDescription(val dish: Dish) : DishIntent()
+    data object ClearGeneratedDescription : DishIntent()
 }

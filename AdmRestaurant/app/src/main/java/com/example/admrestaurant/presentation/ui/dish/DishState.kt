@@ -8,5 +8,7 @@ data class DishState(
     val categories: List<Category> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
-    val successMessage: String? = null
+    val successMessage: String? = null,
+    val isGeneratingDescription: Boolean = false,
+    val generatedDescription: String? = null
 )

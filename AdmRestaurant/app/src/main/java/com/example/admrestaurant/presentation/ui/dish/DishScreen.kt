@@ -3,15 +3,19 @@ package com.example.admrestaurant.presentation.ui.dish
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -28,7 +32,9 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -121,8 +127,13 @@ fun DishScreen(
                         onIntent(DishIntent.UpdateDish(dishEdit.nameDish, dish))
                     }
                     showDialog = false
+                },
+                onGenerateDescription = { dish ->
+                    onIntent(DishIntent.GenerateDescription(dish))
+                },
+                onClearGenerated = {
+                    onIntent(DishIntent.ClearGeneratedDescription)
                 }
-
             )
         }
 
@@ -149,7 +160,9 @@ fun DialogDishAddEdit(
     dishDialogMode: DishDialogMode,
     dish: Dish,
     onDismiss: () -> Unit,
-    onConfirm: (Dish) -> Unit
+    onConfirm: (Dish) -> Unit,
+    onGenerateDescription: (Dish) -> Unit,   // IA: nuevo callback
+    onClearGenerated: () -> Unit             // IA: para limpiar el state tras consumir
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -165,6 +178,13 @@ fun DialogDishAddEdit(
                 )
             }
         )
+    }
+
+    LaunchedEffect(state.generatedDescription) {
+        state.generatedDescription?.let { generated ->
+            formState = formState.copy(descDish = generated)
+            onClearGenerated()
+        }
     }
 
     AlertDialog(
@@ -206,6 +226,36 @@ fun DialogDishAddEdit(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     singleLine = false
                 )
+
+                TextButton(
+                    onClick = {
+                        onGenerateDescription(
+                            Dish(
+                                nameDish = formState.nomDish,
+                                descDish = formState.descDish,
+                                priceDish = formState.priceAsDouble,
+                                category = formState.categoryDish
+                            )
+                        )
+                    },
+                    enabled = formState.nomDish.isNotBlank() && !state.isGeneratingDescription
+                ) {
+                    if (state.isGeneratingDescription) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(16.dp),
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = "Generando...")
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = "Generar descripción con IA")
+                    }
+                }
 
                 OutlinedTextField(
                     value = formState.priceDish,

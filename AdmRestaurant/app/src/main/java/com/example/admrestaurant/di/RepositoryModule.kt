@@ -1,7 +1,9 @@
 package com.example.admrestaurant.di
 
+import com.example.admrestaurant.data.repository.AiRepositoryImpl
 import com.example.admrestaurant.data.repository.CategoryRepositoryImpl
 import com.example.admrestaurant.data.repository.DishRepositoryImpl
+import com.example.admrestaurant.domain.repository.AiRepository
 import com.example.admrestaurant.domain.repository.CategoryRepository
 import com.example.admrestaurant.domain.repository.DishRepository
 import dagger.Binds
@@ -25,5 +27,11 @@ abstract class RepositoryModule {
     abstract fun bindDishRepository(
         dishRepositoryImpl: DishRepositoryImpl
     ): DishRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAiRepository(
+        aiRepositoryImpl: AiRepositoryImpl
+    ): AiRepository
 
 }

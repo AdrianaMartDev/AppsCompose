@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.admrestaurant.domain.model.Dish
 import com.example.admrestaurant.domain.repository.CategoryRepository
 import com.example.admrestaurant.domain.repository.DishRepository
+import com.example.admrestaurant.domain.usecase.GenerateDishDescriptionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DishViewModel @Inject constructor(
     private val dishRepository: DishRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val generateDishDescriptionUseCase: GenerateDishDescriptionUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DishState())
@@ -32,6 +34,8 @@ class DishViewModel @Inject constructor(
             is DishIntent.AddDish -> addDish(intent.dish)
             is DishIntent.UpdateDish -> updateDish(intent.nameDish, intent.dish)
             is DishIntent.DeleteDish -> deleteDish(intent.nameDish)
+            is DishIntent.GenerateDescription -> generateDishDescription(intent.dish)
+            is DishIntent.ClearGeneratedDescription -> clearGeneratedDescription()
         }
     }
 
@@ -70,6 +74,41 @@ class DishViewModel @Inject constructor(
         }
     }
 
+    private fun generateDishDescription(dish: Dish) {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isGeneratingDescription = true,
+                    error = null,
+                    generatedDescription = null
+                )
+            }
+
+            generateDishDescriptionUseCase(dish)
+                .onSuccess { description ->
+                    _state.update {
+                        it.copy(
+                            isGeneratingDescription = false,
+                            generatedDescription = description
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isGeneratingDescription = false,
+                            error = error.message
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun clearGeneratedDescription() {
+        _state.update {
+            it.copy(generatedDescription = null)
+        }
+    }
 
     private fun addDish(dish: Dish) {
         viewModelScope.launch {
