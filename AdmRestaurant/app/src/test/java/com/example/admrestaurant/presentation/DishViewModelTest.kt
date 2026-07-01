@@ -235,6 +235,44 @@ class DishViewModelTest {
         }
     }
 
+    //Delete
+    @Test
+    fun deleteDish_intentReloadsData_onSuccess() = runTest {
+        coEvery { dishRepository.deleteDish(testDish.nameDish) } returns Result.success(testDishes)
+
+        viewModel.state.test {
+            consumeInitStates()
+
+            viewModel.processIntent(DishIntent.DeleteDish(testDish.nameDish))
+
+            awaitItem() // isLoading = true
+            awaitItem() // isLoading = false, datos recargados
+
+            coVerify(atLeast = 2) { dishRepository.getDishes() }
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun deleteDish_intentSets_error_onFailure() = runTest {
+        coEvery { dishRepository.deleteDish(testDish.nameDish) } returns
+                Result.failure(Exception("El platillo no existe"))
+
+        viewModel.state.test {
+            consumeInitStates()
+
+            viewModel.processIntent(DishIntent.DeleteDish(testDish.nameDish))
+
+            awaitItem() // isLoading = true
+
+            val errorState = awaitItem()
+            assertEquals("El platillo no existe", errorState.error)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     //Helpers
     //1) isLoading = true
     //2) isLoading = false, dishes and categories are loaded
