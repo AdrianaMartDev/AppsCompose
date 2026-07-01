@@ -24,7 +24,9 @@ import org.junit.Test
 import app.cash.turbine.test
 import com.example.admrestaurant.presentation.ui.dish.DishIntent
 import com.example.admrestaurant.presentation.ui.dish.DishState
+import io.mockk.coVerify
 import kotlinx.coroutines.test.advanceUntilIdle
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -189,6 +191,45 @@ class DishViewModelTest {
             viewModel.processIntent(DishIntent.ClearGeneratedDescription)
             val clearedState = awaitItem()
             assertNull(clearedState.generatedDescription)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    // AddDish
+    @Test
+    fun addDish_intentReloadsData_onSuccess() = runTest {
+        coEvery { dishRepository.addDish(testDish) } returns
+                Result.success(testDishes)
+
+        viewModel.state.test {
+            consumeInitStates()
+
+            viewModel.processIntent(DishIntent.AddDish(testDish))
+
+            awaitItem()
+            awaitItem()
+            //getDishes should be to call 2 times: init+reload after addDish
+            coVerify(atLeast = 2) { dishRepository.getDishes() }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun addDish_intentSets_error_onFailure() = runTest {
+        coEvery { dishRepository.addDish(testDish) } returns
+                Result.failure(Exception("No se pudo guardar el platillo"))
+
+        viewModel.state.test {
+            consumeInitStates()
+
+            viewModel.processIntent(DishIntent.AddDish(testDish))
+
+            awaitItem() // isLoading = true
+
+            val errorState = awaitItem()
+            assertFalse(errorState.isLoading)
+            assertNotNull(errorState.error)
 
             cancelAndIgnoreRemainingEvents()
         }
