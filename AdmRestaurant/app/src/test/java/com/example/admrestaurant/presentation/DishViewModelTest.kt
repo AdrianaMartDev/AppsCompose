@@ -161,4 +161,29 @@ class DishViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    //ClearGenerationDescription
+    @Test
+    fun clearGeneratedDescription_intentSets_generatedDescription_toNull() = runTest {
+        coEvery { generateDishDescriptionUseCase(testDish) } returns
+                Result.success("Descripcion generada")
+
+        viewModel.state.test {
+            awaitItem() // isLoading = true
+            awaitItem() // isLoading = false
+
+
+            viewModel.processIntent(DishIntent.GenerateDescription(testDish))
+            awaitItem() // isGeneratingDescription = true
+            val withDescription = awaitItem()
+            assertEquals("Descripcion generada", withDescription.generatedDescription)
+
+
+            viewModel.processIntent(DishIntent.ClearGeneratedDescription)
+            val clearedState = awaitItem()
+            assertNull(clearedState.generatedDescription)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }
