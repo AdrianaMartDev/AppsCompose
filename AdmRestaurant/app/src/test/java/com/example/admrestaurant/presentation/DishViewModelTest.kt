@@ -23,6 +23,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import app.cash.turbine.test
 import com.example.admrestaurant.presentation.ui.dish.DishIntent
+import com.example.admrestaurant.presentation.ui.dish.DishState
 import org.junit.Before
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -32,7 +33,7 @@ class DishViewModelTest {
 
     //MOCK
     private val dishRepository: DishRepository = mockk()
-    private val categoryResponse: CategoryRepository = mockk()
+    private val categoryRepository: CategoryRepository = mockk()
     private val generateDishDescriptionUseCase: GenerateDishDescriptionUseCase = mockk()
 
     //Fixtures
@@ -49,8 +50,9 @@ class DishViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
 
         coEvery { dishRepository.getDishes() } returns Result.success(testDishes)
-        coEvery { categoryResponse.getCategories() } returns Result.success(testCategories)
-        viewModel = DishViewModel(dishRepository, categoryResponse, generateDishDescriptionUseCase)
+        coEvery { categoryRepository.getCategories() } returns Result.success(testCategories)
+        viewModel =
+            DishViewModel(dishRepository, categoryRepository, generateDishDescriptionUseCase)
     }
 
     @After
@@ -76,14 +78,40 @@ class DishViewModelTest {
     }
 
     @Test
-    fun loadDataSetsErrorState_whenCategoriesRequest_fails() = runTest {
+    fun loadData_setsError_whenDishesRequestFails() = runTest {
         //Given
         coEvery { dishRepository.getDishes() } returns
                 Result.failure(Exception("Error al cargar las categorías"))
 
-        viewModel.processIntent(DishIntent.LoadDish)
+
         viewModel.state.test {
+            viewModel.processIntent(DishIntent.LoadDish)
+
+            awaitItem() //isLoading = true (init)
+            awaitItem() //isLoading = false (init)
+            awaitItem() //isLoading = true (LoadDish intent)
+
             skipItems(1) // isLoading = true
+
+            val errorState = awaitItem()
+            assertFalse(errorState.isLoading)
+            assertEquals("Error al cargar las categorías", errorState.error)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun loadData_setsError_whenCategoriesRequestFails() = runTest {
+        coEvery { categoryRepository.getCategories() } returns
+                Result.failure(Exception("Error al cargar las categorías"))
+
+        viewModel.state.test {
+            viewModel.processIntent(DishIntent.LoadDish)
+
+            awaitItem() //isLoading = true (init)
+            awaitItem() //isLoading = false (init)
+            awaitItem() //isLoading = true (LoadDish intent)
 
             val errorState = awaitItem()
             assertFalse(errorState.isLoading)
@@ -185,5 +213,13 @@ class DishViewModelTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    //Helpers
+//1) isLoading = true
+//2) isLoading = false, dishes and categories are loaded
+    private suspend fun app.cash.turbine.TurbineTestContext<DishState>.consumeInitStates() {
+        awaitItem()
+        awaitItem()
     }
 }
