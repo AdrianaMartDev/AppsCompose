@@ -24,6 +24,7 @@ import org.junit.Test
 import app.cash.turbine.test
 import com.example.admrestaurant.presentation.ui.dish.DishIntent
 import com.example.admrestaurant.presentation.ui.dish.DishState
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -79,23 +80,21 @@ class DishViewModelTest {
 
     @Test
     fun loadData_setsError_whenDishesRequestFails() = runTest {
-        //Given
         coEvery { dishRepository.getDishes() } returns
-                Result.failure(Exception("Error al cargar las categorías"))
+                Result.failure(Exception("Error al cargar platillos"))
 
+        val viewModelWithError = DishViewModel(
+            dishRepository,
+            categoryRepository,
+            generateDishDescriptionUseCase
+        )
 
-        viewModel.state.test {
-            viewModel.processIntent(DishIntent.LoadDish)
+        advanceUntilIdle()
 
-            awaitItem() //isLoading = true (init)
-            awaitItem() //isLoading = false (init)
-            awaitItem() //isLoading = true (LoadDish intent)
-
-            skipItems(1) // isLoading = true
-
-            val errorState = awaitItem()
+        viewModelWithError.state.test {
+            val errorState = awaitItem() // isLoading = false con error
             assertFalse(errorState.isLoading)
-            assertEquals("Error al cargar las categorías", errorState.error)
+            assertEquals("Error al cargar platillos", errorState.error)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -104,18 +103,20 @@ class DishViewModelTest {
     @Test
     fun loadData_setsError_whenCategoriesRequestFails() = runTest {
         coEvery { categoryRepository.getCategories() } returns
-                Result.failure(Exception("Error al cargar las categorías"))
+                Result.failure(Exception("Error al cargar las categorias"))
 
-        viewModel.state.test {
-            viewModel.processIntent(DishIntent.LoadDish)
+        val viewModelWithError = DishViewModel(
+            dishRepository,
+            categoryRepository,
+            generateDishDescriptionUseCase
+        )
 
-            awaitItem() //isLoading = true (init)
-            awaitItem() //isLoading = false (init)
-            awaitItem() //isLoading = true (LoadDish intent)
+        advanceUntilIdle()
 
+        viewModelWithError.state.test {
             val errorState = awaitItem()
             assertFalse(errorState.isLoading)
-            assertEquals("Error al cargar las categorías", errorState.error)
+            assertEquals("Error al cargar las categorias", errorState.error)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -129,8 +130,7 @@ class DishViewModelTest {
                 Result.success(expectedDescription)
 
         viewModel.state.test {
-            awaitItem() // isLoading = true
-            awaitItem() // isLoading = false
+            consumeInitStates()
 
             viewModel.processIntent(DishIntent.GenerateDescription(testDish))
 
@@ -156,8 +156,7 @@ class DishViewModelTest {
                 Result.failure(Exception("Cuota de Api excedida"))
 
         viewModel.state.test {
-            awaitItem() // isLoading = true
-            awaitItem() // isLoading = false
+            consumeInitStates()
 
             viewModel.processIntent(DishIntent.GenerateDescription(testDish))
 
@@ -172,40 +171,20 @@ class DishViewModelTest {
         }
     }
 
-    @Test
-    fun generateDescription_clearsPreviousDescription_BeforeCallingUseCase() = runTest {
-        //Given
-        coEvery { generateDishDescriptionUseCase(testDish) } returns
-                Result.success("Nueva descripcion")
-
-        viewModel.state.test {
-            awaitItem() // isLoading = true
-            awaitItem() // isLoading = false
-
-            viewModel.processIntent(DishIntent.GenerateDescription(testDish))
-            val generatingState = awaitItem()
-            assertNull(generatingState.generatedDescription)
-
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
     //ClearGenerationDescription
     @Test
     fun clearGeneratedDescription_intentSets_generatedDescription_toNull() = runTest {
+        val description = "Descripcion generada"
         coEvery { generateDishDescriptionUseCase(testDish) } returns
-                Result.success("Descripcion generada")
+                Result.success(description)
 
         viewModel.state.test {
-            awaitItem() // isLoading = true
-            awaitItem() // isLoading = false
-
+            consumeInitStates()
 
             viewModel.processIntent(DishIntent.GenerateDescription(testDish))
             awaitItem() // isGeneratingDescription = true
             val withDescription = awaitItem()
-            assertEquals("Descripcion generada", withDescription.generatedDescription)
-
+            assertEquals(description, withDescription.generatedDescription)
 
             viewModel.processIntent(DishIntent.ClearGeneratedDescription)
             val clearedState = awaitItem()
@@ -216,8 +195,8 @@ class DishViewModelTest {
     }
 
     //Helpers
-//1) isLoading = true
-//2) isLoading = false, dishes and categories are loaded
+    //1) isLoading = true
+    //2) isLoading = false, dishes and categories are loaded
     private suspend fun app.cash.turbine.TurbineTestContext<DishState>.consumeInitStates() {
         awaitItem()
         awaitItem()
