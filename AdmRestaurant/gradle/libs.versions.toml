@@ -16,8 +16,10 @@ glideCompose           = "1.0.0-beta07"
 junit                  = "4.13.2"
 junitExt               = "1.2.1"
 espresso               = "3.6.1"
-uiToolingPreview = "1.11.2"
-uiTooling = "1.11.2"
+uiToolingPreview        = "1.11.2"
+uiTooling               = "1.11.2"
+mockk                   = "1.13.5"
+kotlinxCoroutines       = "1.8.0"
 
 [libraries]
 # Core
@@ -52,6 +54,8 @@ junit              = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit     = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
 espresso-core      = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 compose-ui-test-junit4    = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+mockk    = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+test-kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version = "kotlinxCoroutines" }
 
 # Debug
 compose-ui-tooling        = { group = "androidx.compose.ui", name = "ui-tooling" }
